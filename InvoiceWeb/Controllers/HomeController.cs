@@ -1,5 +1,5 @@
+using InvoiceWeb.Models;
 using Microsoft.AspNetCore.Mvc;
-using Invoice.Models;
 using System.Diagnostics;
 
 namespace InvoiceWeb.Controllers

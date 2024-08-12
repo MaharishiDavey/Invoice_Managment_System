@@ -1,26 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Invoice.Models;
+﻿using Invoice.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Invoice.DataAccess.Data
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public ApplicationDBContext()
-        {
-            
-        }
-        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
-        }
+        }   
 
         public DbSet<PartyDetail> partyDetails { get; set; }
-        public DbSet<Bill> Bills { get; set; }
+        public DbSet<Bill> bills { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -88,6 +85,4 @@ namespace Invoice.DataAccess.Data
                 );
         }
     }
-
-   
 }

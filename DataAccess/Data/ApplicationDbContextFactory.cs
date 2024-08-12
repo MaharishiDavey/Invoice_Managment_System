@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Data
+namespace Invoice.DataAccess.Data
 {
     public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDBContext>
     { 

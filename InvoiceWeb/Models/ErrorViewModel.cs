@@ -1,4 +1,4 @@
-namespace Invoice_Management_System.Models
+namespace InvoiceWeb.Models
 {
     public class ErrorViewModel
     {

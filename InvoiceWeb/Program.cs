@@ -1,7 +1,7 @@
 using Invoice.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Invoice_Management_System
+namespace InvoiceWeb
 {
     public class Program
     {
@@ -9,11 +9,10 @@ namespace Invoice_Management_System
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
             var app = builder.Build();
