@@ -16,14 +16,19 @@ function loadDataTable() {
             {
                 "data": "billNo",
                 "render": function (data) {
-                    return `<div class="w-75 btn-group" role="group">
-                                <a href="/invoice/upsert?billNo=${data}" class="btn btn-primary mx-2">
-                                    <i class="bi bi-pencil-square"></i> Edit 
-                                </a>
-                                <a onClick=Delete('/invoice/delete?billNo=${data}') class="btn btn-danger mx-2"> 
-                                    <i class="bi bi-trash-fill"></i> Delete 
-                                </a>
-                            </div>`;
+                    
+                    if (data) {
+                        return `<div class="w-75 btn-group" role="group">
+                                    <a href="/invoice/upsert?billNo=${data}" class="btn btn-primary mx-2">
+                                        <i class="bi bi-pencil-square"></i> Edit 
+                                    </a>
+                                    <a onClick=Delete('/invoice/delete?billNo=${data}') class="btn btn-danger mx-2"> 
+                                        <i class="bi bi-trash-fill"></i> Delete 
+                                    </a>
+                                </div>`;
+                    } else {
+                        return '<span class="text-danger">No BillNo</span>';
+                    }
                 },
                 "width": "20%"
             }
@@ -34,6 +39,7 @@ function loadDataTable() {
         "width": "100%"
     });
 }
+
 
 function Delete(url) {
     Swal.fire({
