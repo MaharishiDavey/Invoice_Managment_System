@@ -1,30 +1,38 @@
 ﻿var dataTable;
 $(document).ready(function () {
     loadDataTable();
-})
+});
 
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
-        "ajax": {url: '/admin/product/getall'},
+        "ajax": {
+            "url": "/invoice/getall",
+            "type": "GET",
+            "datatype": "json"
+        },
         "columns": [
-            { data: 'title', "width": "25%" },
-            { data: 'isbn', "width": "15%" },
-            { data: 'listPrice', "width": "10%" },
-            { data: 'author', "width": "15%" },
-            { data: 'category.name', "width": "10%" },
+            { "data": "billNo", "width": "30%" },
+            { "data": "partyDetail.partyName", "width": "50%" },
             {
-                data: 'id',
+                "data": "billNo",
                 "render": function (data) {
                     return `<div class="w-75 btn-group" role="group">
-                                <a href="/admin/product/upsert?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit </a>
-                                <a OnClick=Delete('/admin/product/delete?id=${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete </a>
-                            </div>`
-                }, 
-                "width": "25%"
+                                <a href="/invoice/upsert?billNo=${data}" class="btn btn-primary mx-2">
+                                    <i class="bi bi-pencil-square"></i> Edit 
+                                </a>
+                                <a onClick=Delete('/invoice/delete?billNo=${data}') class="btn btn-danger mx-2"> 
+                                    <i class="bi bi-trash-fill"></i> Delete 
+                                </a>
+                            </div>`;
+                },
+                "width": "20%"
             }
-        ] 
+        ],
+        "language": {
+            "emptyTable": "No data found"
+        },
+        "width": "100%"
     });
-
 }
 
 function Delete(url) {
@@ -40,13 +48,19 @@ function Delete(url) {
         if (result.isConfirmed) {
             $.ajax({
                 url: url,
-                type: 'Delete',
+                type: 'DELETE',
                 success: function (data) {
-                    console.log(data.message);
-                    dataTable.ajax.reload();
-                    toastr.success(data.message);
+                    if (data.success) {
+                        dataTable.ajax.reload();
+                        toastr.success(data.message);
+                    } else {
+                        toastr.error(data.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Something went wrong!");
                 }
-            })
+            });
         }
     });
 }

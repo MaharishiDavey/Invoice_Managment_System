@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Invoice.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240815131704_init")]
-    partial class init
+    [Migration("20240827084851_changeBillItemsAmountColum")]
+    partial class changeBillItemsAmountColum
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,13 +29,12 @@ namespace Invoice.DataAccess.Migrations
                     b.Property<string>("BillNo")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("PartyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("PartyId")
+                        .HasColumnType("int");
 
                     b.HasKey("BillNo");
 
-                    b.HasIndex("PartyName");
+                    b.HasIndex("PartyId");
 
                     b.ToTable("Bills");
 
@@ -43,22 +42,22 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             BillNo = "B001",
-                            PartyName = "The Bread Basket"
+                            PartyId = 2
                         },
                         new
                         {
                             BillNo = "B002",
-                            PartyName = "Sweet Tooth Supply"
+                            PartyId = 1
                         },
                         new
                         {
                             BillNo = "B003",
-                            PartyName = "Sweet Tooth Supply"
+                            PartyId = 1
                         },
                         new
                         {
                             BillNo = "B004",
-                            PartyName = "The Bread Basket"
+                            PartyId = 2
                         });
                 });
 
@@ -69,9 +68,6 @@ namespace Invoice.DataAccess.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
 
                     b.Property<string>("BillNo")
                         .IsRequired()
@@ -104,7 +100,6 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            Amount = 40.0,
                             BillNo = "B001",
                             HSNCode = "21436587",
                             Particular = "Cake",
@@ -115,7 +110,6 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 2,
-                            Amount = 50.0,
                             BillNo = "B001",
                             HSNCode = "26843715",
                             Particular = "Apple Pie",
@@ -126,7 +120,6 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 3,
-                            Amount = 40.0,
                             BillNo = "B001",
                             HSNCode = "43219876",
                             Particular = "Cola",
@@ -137,7 +130,6 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 4,
-                            Amount = 40.0,
                             BillNo = "B002",
                             HSNCode = "21436587",
                             Particular = "Cake",
@@ -148,7 +140,6 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 5,
-                            Amount = 50.0,
                             BillNo = "B002",
                             HSNCode = "26843715",
                             Particular = "Apple Pie",
@@ -159,7 +150,6 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 6,
-                            Amount = 40.0,
                             BillNo = "B003",
                             HSNCode = "21436587",
                             Particular = "Cake",
@@ -170,7 +160,6 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 7,
-                            Amount = 50.0,
                             BillNo = "B003",
                             HSNCode = "26843715",
                             Particular = "Apple Pie",
@@ -181,7 +170,6 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 8,
-                            Amount = 40.0,
                             BillNo = "B003",
                             HSNCode = "43219876",
                             Particular = "Cola",
@@ -192,7 +180,6 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 9,
-                            Amount = 30.0,
                             BillNo = "B003",
                             HSNCode = "94712586",
                             Particular = "Ice Cream",
@@ -203,7 +190,6 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 10,
-                            Amount = 40.0,
                             BillNo = "B004",
                             HSNCode = "21436587",
                             Particular = "Cake",
@@ -215,8 +201,11 @@ namespace Invoice.DataAccess.Migrations
 
             modelBuilder.Entity("Invoice.Models.PartyDetail", b =>
                 {
-                    b.Property<string>("PartyName")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -226,22 +215,28 @@ namespace Invoice.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PartyName");
+                    b.Property<string>("PartyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("PartyDetails");
 
                     b.HasData(
                         new
                         {
-                            PartyName = "Sweet Tooth Supply",
+                            Id = 1,
                             Address = "1234 Maple Street, Anytown, CA, 12345, USA",
-                            GSTNumber = "27ABACB5678H1Z5"
+                            GSTNumber = "27ABACB5678H1Z5",
+                            PartyName = "Sweet Tooth Supply"
                         },
                         new
                         {
-                            PartyName = "The Bread Basket",
+                            Id = 2,
                             Address = "5678 Oak Avenue, Springfield, NY, 54321, USA",
-                            GSTNumber = "36AAAC0001AB1Z5"
+                            GSTNumber = "36AAAC0001AB1Z5",
+                            PartyName = "The Bread Basket"
                         });
                 });
 
@@ -249,7 +244,7 @@ namespace Invoice.DataAccess.Migrations
                 {
                     b.HasOne("Invoice.Models.PartyDetail", "PartyDetail")
                         .WithMany()
-                        .HasForeignKey("PartyName")
+                        .HasForeignKey("PartyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

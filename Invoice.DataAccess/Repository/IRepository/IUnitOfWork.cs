@@ -8,10 +8,8 @@ namespace Invoice.DataAccess.Repository.IRepository
 {
     public interface IUnitOfWork
     {
-        IInvoiceRepository Invoice { get; }
         IBillRepository Bill { get; }
         IPartyDetailRepository PartyDetail { get; } 
-        IBillItemRepository BillItem { get; }
         void Save();
     }
 }

@@ -1,4 +1,5 @@
-﻿@* @model List<InvoiceVM> *@
+﻿@using Invoice.Models
+@model List<Bill> 
 
 <div class="card shadow border-0 my-4">
     <div class="card-header bg-secondary bg-gradient ml-0 py-3">
@@ -22,34 +23,25 @@
 
             </div>
 
-            @* <table id="tblData" class="table table-bordered table-striped" width="100%">
+            <table id="tblData" class="table table-bordered table-striped" width="100%">
             <thead>
-            <tr>
-            <th>
-            Title
-            </th>
-            <th>
-            ISBN
-            </th>
-            <th>
-            Price
-            </th>
-            <th>
-            Author
-            </th>
-            <th>
-            Category
-            </th>
-            <th></th>
-            </tr>
-            </thead>
-            </table> *@
+                <tr>
+                    <th>
+                        BillNo
+                    </th>
+                    <th>
+                        PartyName
+                    </th>
+                    <th></th>
+                </tr>
+                </thead>
+            </table>
 
         </div>
 
     </div>
 </div>
 
-@* @section Scripts {
+@section Scripts {
     <script src="~/js/invoice.js"></script>
-} *@
+} 

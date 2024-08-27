@@ -1,72 +1,101 @@
-﻿@* @model InvoiceVM *@
+﻿@using Invoice.Models.ViewModels
+@model InvoiceVM
+
 
 <div class="card shadow border-0 my-4">
     <div class="card-header bg-secondary bg-gradient ml-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2"> @(Model.Bill.BillNo != "" ? "Update" : "Create") Invoice</h2>
+                <h2 class="text-white py-2"> @(string.IsNullOrEmpty(Model.BillModel.BillNo) ? "Create" : "Update") Invoice</h2>
             </div>
         </div>
     </div>
     <div class="card-body p-4">
-        <form method="post" class="row" enctype="multipart/form-data">
-            @* <input asp-for="Model.Bill.BillNo" hidden /> *@
+        <form method="post" class="row" >
+         <input asp-for="@Model.BillModel.BillNo" hidden /> 
             <div class="row">
                 <div class="border p-3">
                     @*<div asp-validation-summary="ModelOnly"></div>*@
-                    @* <div class="form-floating py-2 col-12">
-                        <input asp-for="PartyDeatil.PartyName" class="form-control border-0 shadow" />
-                        <label asp-for="PartyDeatil.PartyName" class="ms-2"></label>
-                        <span asp-validation-for="PartyDeatil.PartyName" class="text-danger"></span>
+                    <div class="form-floating py-2 col-12">
+                        <select asp-for="@Model.BillModel.PartyId" asp-items="@Model.PartyNameList" class="form-select border-0 shadow">
+                            <option disabled selected>--Select Category--</option>
+                        </select>
+                        <label asp-for="BillModel.PartyId" class="ms-2"></label>
+                        <span asp-validation-for="BillModel.PartyId" class="text-danger"></span>
                     </div>
 
                     <div class="form-floating py-2 col-12">
-                        <label asp-for="PartyDeatil.Address" class="ms-2 text-muted"></label>
-                        <textarea asp-for="PartyDeatil.Address" class="form-control border-0 shadow"></textarea>
-                    </div>
-
-                    <div class="form-floating py-2 col-12">
-                        <input asp-for="PartyDeatil.GSTNumber" class="form-control border-0 shadow" />
-                        <label asp-for="PartyDeatil.GSTNumber" class="ms-2"></label>
-                        <span asp-validation-for="PartyDeatil.GSTNumber" class="text-danger"></span>
-                    </div> *@
+                        <input asp-for="@Model.BillModel.BillNo" class="form-control border-0 shadow" />
+                        <label asp-for="@Model.BillModel.BillNo" class="ms-2"></label>
+                        <span asp-validation-for="@Model.BillModel.BillNo" class="text-danger"></span>
+                    </div> 
                     <table class="table table-bordered table-striped" width="100%">
                         <tbody>
-                            <tr>
-                                <td>
-                                    @* <div class="form-floating py-2 col-12">
-                                        <input asp-for="Model.Bill.BillNo" class="form-control border-0 shadow" />
-                                        <label asp-for="Model.Bill.BillNo" class="ms-2"></label>
-                                        <span asp-validation-for="Model.Bill.BillNo" class="text-danger"></span>
-                                    </div> *@
-                                </td>
-                                <td>
-                                    @* <div class="form-floating py-2 col-12">
-                                        <input asp-for="Bill.PartyName" class="form-control border-0 shadow" />
-                                        <label asp-for="Bill.PartyName" class="ms-2"></label>
-                                        <span asp-validation-for="Bill.PartyName" class="text-danger"></span>
-                                    </div> *@
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                
-
-                            </tr>
+                            @if (Model.BillModel.BillItems != null && Model.BillModel.BillItems.Count > 0)
+                            {
+                                for (int i = 0; i < Model.BillModel.BillItems.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="form-floating py-2">
+                                                <input asp-for="BillModel.BillItems[i].SNO" class="form-control border-0 shadow" />
+                                                <label asp-for="BillModel.BillItems[i].SNO" class="ms-2"></label>
+                                                <span asp-validation-for="BillModel.BillItems[i].SNO" class="text-danger"></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-floating py-2">
+                                                <input asp-for="BillModel.BillItems[i].Particular" class="form-control border-0 shadow" />
+                                                <label asp-for="BillModel.BillItems[i].Particular" class="ms-2"></label>
+                                                <span asp-validation-for="BillModel.BillItems[i].Particular" class="text-danger"></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-floating py-2">
+                                                <input asp-for="BillModel.BillItems[i].HSNCode" class="form-control border-0 shadow" />
+                                                <label asp-for="BillModel.BillItems[i].HSNCode" class="ms-2"></label>
+                                                <span asp-validation-for="BillModel.BillItems[i].HSNCode" class="text-danger"></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-floating py-2">
+                                                <input asp-for="BillModel.BillItems[i].Quantity" class="form-control border-0 shadow" />
+                                                <label asp-for="BillModel.BillItems[i].Quantity" class="ms-2"></label>
+                                                <span asp-validation-for="BillModel.BillItems[i].Quantity" class="text-danger"></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-floating py-2">
+                                                <input asp-for="BillModel.BillItems[i].Rate" class="form-control border-0 shadow" />
+                                                <label asp-for="BillModel.BillItems[i].Rate" class="ms-2"></label>
+                                                <span asp-validation-for="BillModel.BillItems[i].Rate" class="text-danger"></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-floating py-2">
+                                                <input asp-for="BillModel.BillItems[i].Amount" class="form-control border-0 shadow" />
+                                                <label asp-for="BillModel.BillItems[i].Amount" class="ms-2"></label>
+                                                <span asp-validation-for="BillModel.BillItems[i].Amount" class="text-danger"></span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
                         </tbody>
                     </table>
+
                     
                     
                     <div class="row pt-2">
                         <div class="col-6 col-md-3">
-                            @* @if (Model.Bill.BillNo != "")
+                            @if (!string.IsNullOrEmpty(Model.BillModel.BillNo))
                             {
                                 <button type="submit" class="btn btn-primary form-control">Update</button>
                             }
                             else
                             {
                                 <button type="submit" class="btn btn-primary form-control">Create</button>
-                            } *@
+                            }
                         </div>
                         <div class="col-6 col-md-3">
                             <a asp-controller="Invoice" asp-action="Index" class="btn btn-outline-primary border  form-control">

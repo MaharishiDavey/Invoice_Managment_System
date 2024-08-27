@@ -15,16 +15,23 @@ namespace Invoice.DataAccess.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Bill>()
+                .HasMany(b => b.BillItems)
+                .WithOne(bi => bi.Bill)
+                .HasForeignKey(bi => bi.BillNo);
+
             // Seeding PartyDetails
             modelBuilder.Entity<PartyDetail>().HasData(
                 new PartyDetail
                 {
+                    Id = 1,
                     PartyName = "Sweet Tooth Supply",
                     Address = "1234 Maple Street, Anytown, CA, 12345, USA",
                     GSTNumber = "27ABACB5678H1Z5"
                 },
                 new PartyDetail
                 {
+                    Id = 2,
                     PartyName = "The Bread Basket",
                     Address = "5678 Oak Avenue, Springfield, NY, 54321, USA",
                     GSTNumber = "36AAAC0001AB1Z5"
@@ -36,22 +43,22 @@ namespace Invoice.DataAccess.Data
                 new Bill
                 {
                     BillNo = "B001",
-                    PartyName = "The Bread Basket"
+                    PartyId = 2
                 },
                 new Bill
                 {
                     BillNo = "B002",
-                    PartyName = "Sweet Tooth Supply"
+                    PartyId = 1
                 },
                 new Bill
                 {
                     BillNo = "B003",
-                    PartyName = "Sweet Tooth Supply"
+                    PartyId = 1
                 },
                 new Bill
                 {
                     BillNo = "B004",
-                    PartyName = "The Bread Basket"
+                    PartyId = 2
                 }
             );
 
@@ -65,7 +72,6 @@ namespace Invoice.DataAccess.Data
                     HSNCode = "21436587",
                     Quantity = 2,
                     Rate = 20,
-                    Amount = 40,
                     BillNo = "B001"
                 },
                 new BillItem
@@ -76,7 +82,6 @@ namespace Invoice.DataAccess.Data
                     HSNCode = "26843715",
                     Quantity = 1,
                     Rate = 50,
-                    Amount = 50,
                     BillNo = "B001"
                 },
                 new BillItem
@@ -87,7 +92,6 @@ namespace Invoice.DataAccess.Data
                     HSNCode = "43219876",
                     Quantity = 1,
                     Rate = 40,
-                    Amount = 40,
                     BillNo = "B001"
                 },
                 new BillItem
@@ -98,7 +102,6 @@ namespace Invoice.DataAccess.Data
                     HSNCode = "21436587",
                     Quantity = 2,
                     Rate = 20,
-                    Amount = 40,
                     BillNo = "B002"
                 },
                 new BillItem
@@ -109,7 +112,6 @@ namespace Invoice.DataAccess.Data
                     HSNCode = "26843715",
                     Quantity = 1,
                     Rate = 50,
-                    Amount = 50,
                     BillNo = "B002"
                 },
                 new BillItem
@@ -120,7 +122,6 @@ namespace Invoice.DataAccess.Data
                     HSNCode = "21436587",
                     Quantity = 2,
                     Rate = 20,
-                    Amount = 40,
                     BillNo = "B003"
                 },
                 new BillItem
@@ -131,7 +132,6 @@ namespace Invoice.DataAccess.Data
                     HSNCode = "26843715",
                     Quantity = 1,
                     Rate = 50,
-                    Amount = 50,
                     BillNo = "B003"
                 },
                 new BillItem
@@ -142,7 +142,6 @@ namespace Invoice.DataAccess.Data
                     HSNCode = "43219876",
                     Quantity = 1,
                     Rate = 40,
-                    Amount = 40,
                     BillNo = "B003"
                 },
                 new BillItem
@@ -153,7 +152,6 @@ namespace Invoice.DataAccess.Data
                     HSNCode = "94712586",
                     Quantity = 2,
                     Rate = 15,
-                    Amount = 30,
                     BillNo = "B003"
                 },
                 new BillItem
@@ -164,7 +162,6 @@ namespace Invoice.DataAccess.Data
                     HSNCode = "21436587",
                     Quantity = 2,
                     Rate = 20,
-                    Amount = 40,
                     BillNo = "B004"
                 }
             );

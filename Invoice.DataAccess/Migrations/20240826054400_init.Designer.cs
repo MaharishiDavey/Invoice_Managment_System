@@ -3,6 +3,7 @@ using Invoice.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Invoice.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240826054400_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,6 +69,9 @@ namespace Invoice.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
                     b.Property<string>("BillNo")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -97,6 +103,7 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 1,
+                            Amount = 40.0,
                             BillNo = "B001",
                             HSNCode = "21436587",
                             Particular = "Cake",
@@ -107,6 +114,7 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 2,
+                            Amount = 50.0,
                             BillNo = "B001",
                             HSNCode = "26843715",
                             Particular = "Apple Pie",
@@ -117,6 +125,7 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 3,
+                            Amount = 40.0,
                             BillNo = "B001",
                             HSNCode = "43219876",
                             Particular = "Cola",
@@ -127,6 +136,7 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 4,
+                            Amount = 40.0,
                             BillNo = "B002",
                             HSNCode = "21436587",
                             Particular = "Cake",
@@ -137,6 +147,7 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 5,
+                            Amount = 50.0,
                             BillNo = "B002",
                             HSNCode = "26843715",
                             Particular = "Apple Pie",
@@ -147,6 +158,7 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 6,
+                            Amount = 40.0,
                             BillNo = "B003",
                             HSNCode = "21436587",
                             Particular = "Cake",
@@ -157,6 +169,7 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 7,
+                            Amount = 50.0,
                             BillNo = "B003",
                             HSNCode = "26843715",
                             Particular = "Apple Pie",
@@ -167,6 +180,7 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 8,
+                            Amount = 40.0,
                             BillNo = "B003",
                             HSNCode = "43219876",
                             Particular = "Cola",
@@ -177,6 +191,7 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 9,
+                            Amount = 30.0,
                             BillNo = "B003",
                             HSNCode = "94712586",
                             Particular = "Ice Cream",
@@ -187,6 +202,7 @@ namespace Invoice.DataAccess.Migrations
                         new
                         {
                             Id = 10,
+                            Amount = 40.0,
                             BillNo = "B004",
                             HSNCode = "21436587",
                             Particular = "Cake",

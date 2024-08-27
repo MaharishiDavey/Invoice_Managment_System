@@ -3,6 +3,7 @@ using Invoice.Models;
 using Invoice.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace InvoiceWeb.Controllers
 {
@@ -16,96 +17,119 @@ namespace InvoiceWeb.Controllers
 
         public IActionResult Index()
         {
-            List<InvoiceVM> objInvoiceList = _unitOfWork.Invoice.GetAll().ToList();
-            //return View(objInvoiceList);
+            List<Bill> objInvoiceList = _unitOfWork.Bill.GetAll(includeProperties: "PartyDetail").ToList();
             Console.WriteLine(objInvoiceList);
-            return View();
+            return View(objInvoiceList);
         }
 
-        public IActionResult Upsert(string? BillNo)
+        public IActionResult Upsert(string? billNo)
         {
-
             InvoiceVM invoiceVM = new()
             {
-                PartyDetail = new PartyDetail(),
-                Bill = new Bill(),
-                BillItem = new BillItem()
+                PartyNameList = _unitOfWork.PartyDetail.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.PartyName,
+                    Value = u.Id.ToString()
+                }).ToList(),
+
+                BillModel = new Bill()
             };
-            if (BillNo == null || BillNo == "")
+
+            if (string.IsNullOrEmpty(billNo))
             {
-                //create
+                // Create a new Bill
+                invoiceVM.BillModel.BillItems = new List<BillItem>{
+                    new BillItem() // Initialize with at least one BillItem if needed
+                };
                 return View(invoiceVM);
             }
             else
             {
-                //Update
-                invoiceVM.Bill = _unitOfWork.Bill.Get(u => u.BillNo == BillNo);
-                invoiceVM.BillItem = _unitOfWork.BillItem.Get(u => u.BillNo == BillNo);
+                // Update existing Bill
+                invoiceVM.BillModel = _unitOfWork.Bill.Get(
+                    u => u.BillNo == billNo,
+                    includeProperties: "BillItems"
+                );
+
+                if (invoiceVM.BillModel == null)
+                {
+                    return NotFound();
+                }
+
+                // Ensure BillItems list is not null to avoid null reference issues
+                if (invoiceVM.BillModel.BillItems == null)
+                {
+                    invoiceVM.BillModel.BillItems = new List<BillItem>{
+                        new BillItem() // Initialize with at least one BillItem if needed
+                    };
+                }
+
                 return View(invoiceVM);
             }
-
         }
+
+
         [HttpPost]
         public IActionResult Upsert(InvoiceVM invoiceVM)
         {
             if (ModelState.IsValid)
             {
-                
-                if (invoiceVM.Bill.BillNo == "")
+                if (string.IsNullOrEmpty(invoiceVM.BillModel.BillNo))
                 {
-                    _unitOfWork.Bill.Add(invoiceVM.Bill);
-                    _unitOfWork.BillItem.Add(invoiceVM.BillItem);
+                    // Create new Bill
+                    _unitOfWork.Bill.Add(invoiceVM.BillModel);
                 }
                 else
                 {
-                    _unitOfWork.Bill.Update(invoiceVM.Bill);
-                    _unitOfWork.BillItem.Update(invoiceVM.BillItem);
+                    // Update existing Bill
+                    var existingBill = _unitOfWork.Bill.Get(u => u.BillNo == invoiceVM.BillModel.BillNo);
+                    existingBill.PartyId = invoiceVM.BillModel.PartyId;
+                    existingBill.BillItems = invoiceVM.BillModel.BillItems;
+                    _unitOfWork.Bill.Update(existingBill);
                 }
 
                 _unitOfWork.Save();
-                TempData["success"] = "Product created successfully";
+                TempData["success"] = "Bill saved successfully";
                 return RedirectToAction("Index");
             }
             else
             {
+                invoiceVM.PartyNameList = _unitOfWork.PartyDetail.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.PartyName,
+                    Value = u.Id.ToString()
+                }).ToList();
+
                 return View(invoiceVM);
             }
         }
 
-        //#region Api Call
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
-        //    return Json(new { data = objProductList });
-        //}
 
-        //[HttpDelete]
-        //public IActionResult Delete(int? id)
-        //{
-        //    var productToBeDeleted = _unitOfWork.Product.Get(u => u.Id == id);
+        #region Api Call
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            List<Bill> objBillList = _unitOfWork.Bill.GetAll(includeProperties: "PartyDetail").ToList();
+            return Json(new { data = objBillList });
+        }
 
-        //    if (productToBeDeleted == null)
-        //    {
-        //        return Json(new { success = false, message = "Error while deleting" });
-        //    }
+        [HttpDelete]
+        public IActionResult Delete(string? BillNo)
+        {
+            var BillToBeDeleted = _unitOfWork.Bill.Get(u => u.BillNo == BillNo);
 
-        //    var oldImagePath =
-        //                    Path.Combine(_webHostEnvironment.WebRootPath,
-        //                    productToBeDeleted.ImageUrl.TrimStart('\\'));
+            if (BillToBeDeleted == null)
+            {
+                return Json(new { success = false, message = "Error while deleting" });
+            }
 
-        //    if (System.IO.File.Exists(oldImagePath))
-        //    {
-        //        System.IO.File.Delete(oldImagePath);
-        //    }
+            _unitOfWork.Bill.Remove(BillToBeDeleted);
+            _unitOfWork.Save();
 
-        //    _unitOfWork.Product.Remove(productToBeDeleted);
-        //    _unitOfWork.Save();
+            return Json(new { success = true, message = "Deleted Successfully" });
+        }
 
-        //    return Json(new { success = true, message = "Deleted Successfully" });
-        //}
-
-        //#endregion
+        #endregion
 
     }
 }

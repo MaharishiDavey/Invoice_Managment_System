@@ -16,13 +16,15 @@ namespace Invoice.DataAccess.Migrations
                 name: "PartyDetails",
                 columns: table => new
                 {
-                    PartyName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PartyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GSTNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PartyDetails", x => x.PartyName);
+                    table.PrimaryKey("PK_PartyDetails", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -30,16 +32,16 @@ namespace Invoice.DataAccess.Migrations
                 columns: table => new
                 {
                     BillNo = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PartyName = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    PartyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Bills", x => x.BillNo);
                     table.ForeignKey(
-                        name: "FK_Bills_PartyDetails_PartyName",
-                        column: x => x.PartyName,
+                        name: "FK_Bills_PartyDetails_PartyId",
+                        column: x => x.PartyId,
                         principalTable: "PartyDetails",
-                        principalColumn: "PartyName",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -70,22 +72,22 @@ namespace Invoice.DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "PartyDetails",
-                columns: new[] { "PartyName", "Address", "GSTNumber" },
+                columns: new[] { "Id", "Address", "GSTNumber", "PartyName" },
                 values: new object[,]
                 {
-                    { "Sweet Tooth Supply", "1234 Maple Street, Anytown, CA, 12345, USA", "27ABACB5678H1Z5" },
-                    { "The Bread Basket", "5678 Oak Avenue, Springfield, NY, 54321, USA", "36AAAC0001AB1Z5" }
+                    { 1, "1234 Maple Street, Anytown, CA, 12345, USA", "27ABACB5678H1Z5", "Sweet Tooth Supply" },
+                    { 2, "5678 Oak Avenue, Springfield, NY, 54321, USA", "36AAAC0001AB1Z5", "The Bread Basket" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Bills",
-                columns: new[] { "BillNo", "PartyName" },
+                columns: new[] { "BillNo", "PartyId" },
                 values: new object[,]
                 {
-                    { "B001", "The Bread Basket" },
-                    { "B002", "Sweet Tooth Supply" },
-                    { "B003", "Sweet Tooth Supply" },
-                    { "B004", "The Bread Basket" }
+                    { "B001", 2 },
+                    { "B002", 1 },
+                    { "B003", 1 },
+                    { "B004", 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -111,9 +113,9 @@ namespace Invoice.DataAccess.Migrations
                 column: "BillNo");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bills_PartyName",
+                name: "IX_Bills_PartyId",
                 table: "Bills",
-                column: "PartyName");
+                column: "PartyId");
         }
 
         /// <inheritdoc />

@@ -18,7 +18,7 @@ namespace Invoice.Models
 
         public double Rate { get; set; }
 
-        public double Amount { get; set; }
+        public double Amount => Quantity * Rate;
 
         // Foreign key to Bill
         public string BillNo { get; set; }

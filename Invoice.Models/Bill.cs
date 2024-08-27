@@ -14,9 +14,9 @@ namespace Invoice.Models
         // Navigation property to BillItems
         public List<BillItem> BillItems { get; set; }
 
-        public string PartyName { get; set; }
+        public int PartyId { get; set; }
 
-        [ForeignKey("PartyName")]
+        [ForeignKey("PartyId")]
         [ValidateNever]
         public PartyDetail PartyDetail { get; set; }
     }

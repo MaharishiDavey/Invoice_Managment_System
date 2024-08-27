@@ -10,6 +10,7 @@ namespace Invoice.Models
     public class PartyDetail
     {
         [Key]
+        public int Id { get; set; }    
         public string PartyName { get; set; }
         public string Address { get; set; }
         public string GSTNumber { get; set; }
